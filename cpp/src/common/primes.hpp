@@ -2,6 +2,7 @@
 #define _PRIMES_HPP_
 
 #include <cstdint>
+#include <vector>
 
 namespace common {
 
@@ -13,7 +14,9 @@ namespace common {
     return true;
   }
 
-  void printPrimeFactors(uint64_t num) {
+  std::vector<std::pair<uint64_t,uint64_t> > getPrimeFactors(uint64_t num) {
+    std::vector<std::pair<uint64_t,uint64_t> > factorMap;
+
     uint32_t power = 0;
 
     while (num % 2 == 0) {
@@ -22,7 +25,7 @@ namespace common {
     }
     
     if (power >= 1) {
-      std::cout << "2 ^ " << power << std::endl;
+      factorMap.push_back(std::pair<uint64_t,uint64_t>(2,power));
       power = 0;
     }
 
@@ -34,12 +37,30 @@ namespace common {
       }
 
       if (power >= 1) {
-        std::cout << d << " ^ " << power << std::endl;
+        factorMap.push_back(std::pair<uint64_t,uint64_t>(d,power));
         power = 0;
       }
 
       d += 2;
     }
+    return factorMap;
+  }
+
+  void printPrimeFactors(uint64_t num) {
+    std::vector<std::pair<uint64_t,uint64_t> > factors = getPrimeFactors(num);
+
+    for (uint32_t idx = 0; idx < factors.size(); ++idx) {
+      std::cout << factors[idx].first << " ^ " << factors[idx].second << std::endl;
+    }
+  }
+
+  uint64_t power(uint64_t n, uint64_t p) {
+    uint64_t x = 1;
+    while (p > 0) {
+      x *= n;
+      p -= 1;
+    }
+    return x;
   }
 
   bool isPalindromic(uint32_t num) {
