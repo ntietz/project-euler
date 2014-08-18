@@ -1,6 +1,6 @@
 
 all:
-	g++ src/euler.cpp -o euler
+	g++ src/euler.cpp -I src/ -o euler
 
 clean:
 	rm euler
