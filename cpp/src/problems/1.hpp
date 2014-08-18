@@ -10,7 +10,9 @@ namespace problem1 {
 
     static const uint32_t MAX = 1000;
     for (uint32_t num = 0; num < MAX; ++num) {
-      if (num % 3 == 0 || num % 5 == 0) sum += num;
+      if (num % 3 == 0 || num % 5 == 0) {
+        sum += num;
+      }
     }
 
     std::cout << "sum = " << sum << std::endl;
