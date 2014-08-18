@@ -1,8 +1,9 @@
 #include <iostream>
+#include "problems/1.hpp"
 
 using namespace std;
 
 int main() {
-  cout << "Hello, world." << endl;
+  problem1::solve();
 }
 
