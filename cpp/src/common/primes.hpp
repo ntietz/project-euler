@@ -3,14 +3,17 @@
 
 #include <cstdint>
 #include <vector>
+#include <list>
 
 namespace common {
 
   std::vector<uint64_t> primes;
 
   bool isPrime(uint64_t num) {
-    if (num % 2 == 0) return false;
-    for (uint64_t d = 3; d*d < num; d += 2) {
+    if (num == 2 || num == 3 || num == 5 || num == 7) return true;
+    else if (num <= 10) return false;
+    else if (num % 2 == 0) return false;
+    for (uint64_t d = 3; d*d <= num; d += 2) {
       if (num % d == 0) return false;
     }
     return true;
@@ -19,6 +22,8 @@ namespace common {
   /** The LazyPrimeList implements a basic sieve for primes and only computes
     * the primes when it is asked for them (but with some minor precomputation
     * for effeciency).
+    *
+    * WARNING: this is very slow.
     */
   class LazyPrimeList {
    public:
@@ -37,10 +42,11 @@ namespace common {
     // Computes more primes and stores them.
     void computeMore() {
       uint64_t low = highestChecked + 1;
-      uint64_t high = low * 2;
+      uint64_t high = low * 2; // TODO(ntietz): pick a better bound
+      std::cout << "Checking " << high << ", found " << primes.size() << " primes." << std::endl;
       highestChecked = high;
 
-      std::vector<uint64_t> candidates;
+      std::list<uint64_t> candidates;
 
       for (uint64_t i = low; i <= high; ++i) {
         candidates.push_back(i);
@@ -49,17 +55,18 @@ namespace common {
       for (uint64_t i = 0; i < primes.size(); ++i) {
         uint64_t p = primes[i];
         uint64_t num = p;
-        for (uint64_t k = 0; k < candidates.size(); ++k) {
-          if (candidates[k] && !(candidates[k] % p)) {
-            candidates[k] = 0;
+        std::list<uint64_t>::iterator iter = candidates.begin();
+        while (iter != candidates.end()) {
+          if (!(*iter % p)) {
+            iter = candidates.erase(iter);
+          } else {
+            ++iter;
           }
         }
       }
 
-      for (uint64_t i = 0; i < candidates.size(); ++i) {
-        if (candidates[i]) {
-          primes.push_back(candidates[i]);
-        }
+      for (auto p : candidates) {
+        primes.push_back(p);
       }
     }
 

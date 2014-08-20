@@ -8,6 +8,7 @@
 #include "problems/7.hpp"
 #include "problems/8.hpp"
 #include "problems/9.hpp"
+#include "problems/10.hpp"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ int main() {
   //problem6::solve();
   //problem7::solve();
   //problem8::solve();
-  problem9::solve();
+  //problem9::solve();
+  problem10::solve();
 }
 
