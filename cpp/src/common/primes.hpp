@@ -6,6 +6,8 @@
 
 namespace common {
 
+  std::vector<uint64_t> primes;
+
   bool isPrime(uint64_t num) {
     if (num % 2 == 0) return false;
     for (uint64_t d = 3; d*d < num; d += 2) {
@@ -13,6 +15,57 @@ namespace common {
     }
     return true;
   }
+
+  /** The LazyPrimeList implements a basic sieve for primes and only computes
+    * the primes when it is asked for them (but with some minor precomputation
+    * for effeciency).
+    */
+  class LazyPrimeList {
+   public:
+    LazyPrimeList() {
+      highestChecked = 1;
+    }
+
+    uint64_t operator[](uint64_t index) {
+      while (primes.size() <= index) {
+        computeMore();
+      }
+      return primes[index];
+    }
+
+   protected:
+    // Computes more primes and stores them.
+    void computeMore() {
+      uint64_t low = highestChecked + 1;
+      uint64_t high = low * 2;
+      highestChecked = high;
+
+      std::vector<uint64_t> candidates;
+
+      for (uint64_t i = low; i <= high; ++i) {
+        candidates.push_back(i);
+      }
+
+      for (uint64_t i = 0; i < primes.size(); ++i) {
+        uint64_t p = primes[i];
+        uint64_t num = p;
+        for (uint64_t k = 0; k < candidates.size(); ++k) {
+          if (candidates[k] && !(candidates[k] % p)) {
+            candidates[k] = 0;
+          }
+        }
+      }
+
+      for (uint64_t i = 0; i < candidates.size(); ++i) {
+        if (candidates[i]) {
+          primes.push_back(candidates[i]);
+        }
+      }
+    }
+
+    std::vector<uint64_t> primes;
+    uint64_t highestChecked;
+  };
 
   std::vector<std::pair<uint64_t,uint64_t> > getPrimeFactors(uint64_t num) {
     std::vector<std::pair<uint64_t,uint64_t> > factorMap;
